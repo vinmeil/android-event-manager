@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Enter Number of Available Tickets"
-                android:inputType="textPersonName" />
+                android:inputType="number" />
 
             <Switch
                 android:id="@+id/switchEventIsActive"

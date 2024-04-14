@@ -118,6 +118,12 @@ public class NewEventActivity extends AppCompatActivity {
                 isValid = false;
             }
 
+            if (!eventName.matches("[a-zA-Z0-9 ]+")) {
+                isValid = false;
+            }
+
+            // TODO: Check if categoryId exists in shared preferences.
+
             if (!ticketsAvailable.isEmpty()) {
                 try {
                     int ticketsAvailableInt = Integer.parseInt(splitMessage[2]);

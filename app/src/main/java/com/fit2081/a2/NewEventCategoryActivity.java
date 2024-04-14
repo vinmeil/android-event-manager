@@ -113,9 +113,13 @@ public class NewEventCategoryActivity extends AppCompatActivity {
                 isValid = false;
             }
 
+            if (!categoryName.matches("[a-zA-Z0-9 ]+")) {
+                isValid = false;
+            }
+
             if (!categoryEventCount.isEmpty()) {
                 try {
-                    Integer.parseInt(splitMessage[1]);
+                    Integer.parseInt(categoryEventCount);
                 } catch (Exception e) {
                     isValid = false;
                 }
