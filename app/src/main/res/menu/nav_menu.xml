@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/item_id_1"
-        android:title="Item One" />
+        android:id="@+id/view_all_categories"
+        android:title="View All Categories" />
     <item
-        android:id="@+id/item_id_2"
-        android:title="Item Two" />
+        android:id="@+id/add_category"
+        android:title="Add Category" />
+    <item
+        android:id="@+id/view_all_events"
+        android:title="View All Events" />
+    <item
+        android:id="@+id/logout"
+        android:title="Logout" />
 </menu>

@@ -37,18 +37,31 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(item -> {
+            Intent intent;
             switch (item.getItemId()) {
-                case R.id.item_id_1:
-                    Toast.makeText(this, "Clicked 1", Toast.LENGTH_SHORT).show();
+                case R.id.view_all_categories:
+                    Toast.makeText(this, "Clicked View All Categories", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.item_id_2:
-                    Toast.makeText(this, "Clicked 2", Toast.LENGTH_SHORT).show();
+                case R.id.add_category:
+                    intent = new Intent(this, NewEventCategoryActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.view_all_events:
+                    Toast.makeText(this, "Clicked View All Events", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.logout:
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(KeyStore.KEY_IS_LOGGED_IN, false);
+                    editor.apply();
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
             }
             return true;
         });
 
-        if (username == null || password == null) {
+        if (username == null || password == null || !sharedPreferences.getBoolean(KeyStore.KEY_IS_LOGGED_IN, false)) {
             // User is not logged in, redirect to Sign Up activity
             Intent intent = new Intent(this, SignupActivity.class);
             startActivity(intent);

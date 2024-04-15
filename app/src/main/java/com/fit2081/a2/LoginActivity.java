@@ -45,6 +45,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (username.equals(usernamePreference) && password.equals(passwordPreference)) {
             // User is logged in, redirect to Main activity
+            SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(KeyStore.KEY_IS_LOGGED_IN, true);
+            editor.apply();
             redirectToMainActivity();
         } else {
             Toast.makeText(this, "Authentication failure: Username or Password is incorrect", Toast.LENGTH_SHORT).show();
