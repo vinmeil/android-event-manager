@@ -1,9 +1,13 @@
 package com.fit2081.a2.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,10 +15,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
+import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
     FloatingActionButton fab;
+    EditText etEventId, etEventName, etEventCategoryId, etTicketsAvailable;
+    Switch isEventActive;
+    String[] splitMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.nav_view);
         fab = findViewById(R.id.fab);
 
+        CreateEventForm createEventForm = (CreateEventForm) getSupportFragmentManager().findFragmentById(R.id.fragmentViewCreate);
+
         // Drawer layout toggle
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -64,20 +76,62 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupNavigationMenu();
+        waitForFragmentCreated();
 
         // Add listener to the floating action button
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Saved Event", Snackbar.LENGTH_LONG)
-                        .setAction("Undo", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Snackbar.make(view, "Undo Save Event", Snackbar.LENGTH_SHORT).show();
-                            }
-                        }).show();
+                NewEventUtils.onCreateNewEventButtonClick(
+                        MainActivity.this,
+                        view,
+                        etEventId,
+                        etEventName,
+                        etEventCategoryId,
+                        etTicketsAvailable,
+                        splitMessage,
+                        isEventActive
+                );
             }
         });
+    }
+
+    private void waitForFragmentCreated() {
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(
+                    @NonNull FragmentManager fragmentManager,
+                    @NonNull Fragment fragment,
+                    @NonNull View view,
+                    @Nullable Bundle savedInstanceState
+            ) {
+                super.onFragmentViewCreated(fragmentManager, fragment, view, savedInstanceState);
+
+                if (fragment instanceof CreateEventForm) {
+                    etEventId = view.findViewById(R.id.editTextEventId);
+                    etEventName = view.findViewById(R.id.editTextEventName);
+                    etEventCategoryId = view.findViewById(R.id.editTextEventCategoryId);
+                    etTicketsAvailable = view.findViewById(R.id.editTextTicketsAvailable);
+                    isEventActive = view.findViewById(R.id.switchEventIsActive);
+
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            NewEventUtils.onCreateNewEventButtonClick(
+                                    MainActivity.this,
+                                    view,
+                                    etEventId,
+                                    etEventName,
+                                    etEventCategoryId,
+                                    etTicketsAvailable,
+                                    splitMessage,
+                                    isEventActive
+                            );
+                        }
+                    });
+                }
+            }
+        }, false);
     }
 
     private void setupNavigationMenu() {
