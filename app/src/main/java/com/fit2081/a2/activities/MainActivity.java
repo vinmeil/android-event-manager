@@ -1,8 +1,7 @@
-package com.fit2081.a2;
+package com.fit2081.a2.activities;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -14,9 +13,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.fit2081.a2.KeyStore;
+import com.fit2081.a2.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
+import com.fit2081.a2.fragments.CreateEventForm;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.RECEIVE_SMS,
                 android.Manifest.permission.READ_SMS
         }, 0);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewCreate, new CreateEventForm()).addToBackStack("f1").commit();
 
         // Find views
         drawerLayout = findViewById(R.id.drawer_layout);
