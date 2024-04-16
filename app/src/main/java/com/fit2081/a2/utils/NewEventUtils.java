@@ -3,18 +3,22 @@ package com.fit2081.a2.utils;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.activities.MainActivity;
+import com.fit2081.a2.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class NewEventUtils {
+    private static ArrayList<Event> events = new ArrayList<>();
     public static void onCreateNewEventButtonClick(
             Context context,
             View view,
@@ -39,7 +43,22 @@ public class NewEventUtils {
             etEventCategoryId.setText("");
             etTicketsAvailable.setText("");
             isEventActive.setChecked(false);
-            saveDataToSharedPreference(context, eventId, splitMessage);
+
+            if (splitMessage[2].isEmpty()) {
+                splitMessage[2] = "-";
+            }
+
+            if (splitMessage[3].isEmpty()) {
+                splitMessage[3] = "false";
+            }
+
+            Event event = new Event(eventId, splitMessage[0], splitMessage[1], splitMessage[2], Boolean.parseBoolean(splitMessage[3]));
+            events.add(event);
+
+
+            Gson gson = new Gson();
+            String eventsStr = gson.toJson(events);
+            saveDataToSharedPreference(context, eventsStr);
             Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG)
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
@@ -47,6 +66,13 @@ public class NewEventUtils {
                             Snackbar.make(view, "Undo Save Event", Snackbar.LENGTH_SHORT).show();
                         }
                     }).show();
+
+            String getEvents = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE).getString(KeyStore.KEY_EVENTS, "");
+            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+            ArrayList<Event> dbEvents = gson.fromJson(getEvents, type);
+            if (dbEvents != null) {
+                // do something here
+            }
         } else {
             Snackbar.make(view, "Invalid inputs in fields!", Snackbar.LENGTH_SHORT).show();
         }
@@ -105,24 +131,11 @@ public class NewEventUtils {
         return eventId;
     }
 
-    private static void saveDataToSharedPreference(Context context, String eventId, String[] messageDetails) {
+    private static void saveDataToSharedPreference(Context context, String events) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(KeyStore.KEY_EVENT_ID, eventId);
-        editor.putString(KeyStore.KEY_EVENT_NAME, messageDetails[0]);
-        editor.putString(KeyStore.KEY_EVENT_CATEGORY_ID, messageDetails[1]);
-
-        if (!messageDetails[2].isEmpty()) {
-            int ticketsAvailable = Integer.parseInt(messageDetails[2]);
-            editor.putInt(KeyStore.KEY_EVENT_TICKETS_AVAILABLE, ticketsAvailable);
-        }
-
-        if (!messageDetails[3].isEmpty()) {
-            boolean isEventActive = Boolean.parseBoolean(messageDetails[3]);
-            editor.putBoolean(KeyStore.KEY_IS_EVENT_ACTIVE, isEventActive);
-        }
-
+        editor.putString(KeyStore.KEY_EVENTS, events);
         editor.apply();
     }
 }

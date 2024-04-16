@@ -1,10 +1,9 @@
-package com.fit2081.a2.fragments;
+package com.fit2081.a2.components;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,9 +15,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
-import com.fit2081.a2.activities.MainActivity;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.fit2081.a2.utils.SMSReceiver;
 

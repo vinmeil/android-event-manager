@@ -23,7 +23,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentViewCreate"
-                android:name="com.fit2081.a2.fragments.CreateEventForm"
+                android:name="com.fit2081.a2.components.CreateEventForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -24,9 +24,8 @@ import com.fit2081.a2.R;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import com.fit2081.a2.fragments.CreateEventForm;
+import com.fit2081.a2.components.CreateEventForm;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -147,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.view_all_events:
-                    Toast.makeText(this, "Clicked View All Events", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(this, ViewAllEventsActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.logout:
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -160,16 +160,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-    }
-
-    public void onCreateNewEventCategoryButtonClick(View view) {
-        Intent intent = new Intent(this, NewEventCategoryActivity.class);
-        startActivity(intent);
-    }
-
-    public void onAddEventButtonClick(View view) {
-        Intent intent = new Intent(this, NewEventActivity.class);
-        startActivity(intent);
     }
 
     @Override
