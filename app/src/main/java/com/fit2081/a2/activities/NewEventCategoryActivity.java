@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -15,13 +16,20 @@ import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
+import com.fit2081.a2.schemas.Category;
 import com.fit2081.a2.utils.SMSReceiver;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class NewEventCategoryActivity extends AppCompatActivity {
     EditText etCategoryId, etCategoryName, etCategoryEventCount;
     Switch isCategoryEventActive;
     String[] splitMessage;
     EventCategoryBroadCastReceiver eventCategoryBroadCastReceiver;
+    ArrayList<Category> categoriesDb = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +67,21 @@ public class NewEventCategoryActivity extends AppCompatActivity {
 
         if (isValid) {
             splitMessage = temporaryMessage;
-            saveDataToSharedPreference(categoryId, splitMessage);
-            String toastMessage = String.format("Category saved successfully: %s.", categoryId);
+
+            if (splitMessage[1].isEmpty()) {
+                splitMessage[1] = "-";
+            }
+
+            if (splitMessage[2].isEmpty()) {
+                splitMessage[2] = "false";
+            }
+
+            loadDataFromSharedPreference();
+            Category category = new Category(categoryId, splitMessage[0], splitMessage[1], Boolean.parseBoolean(splitMessage[2]));
+            categoriesDb.add(category);
+            System.out.println(categoriesDb);
+            System.out.println(categoriesDb.size());
+            saveDataToSharedPreference(categoriesDb);
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -69,23 +90,25 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         }
     }
 
+    private void loadDataFromSharedPreference() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        categoriesDb = gson.fromJson(categoriesStr, type);
+        if (categoriesDb == null) {
+            categoriesDb = new ArrayList<>();
+        }
+    }
 
-    private void saveDataToSharedPreference(String categoryId, String[] messageDetails) {
+
+    private void saveDataToSharedPreference(ArrayList<Category> categories) {
         SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(KeyStore.KEY_CATEGORY_ID, categoryId);
-        editor.putString(KeyStore.KEY_CATEGORY_NAME, messageDetails[0]);
-
-        if (!messageDetails[1].isEmpty()) {
-            int categoryEventCount = Integer.parseInt(messageDetails[1]);
-            editor.putInt(KeyStore.KEY_CATEGORY_EVENT_COUNT, categoryEventCount);
-        }
-
-        if (!messageDetails[2].isEmpty()) {
-            boolean isCategoryEventActive = Boolean.parseBoolean(messageDetails[2]);
-            editor.putBoolean(KeyStore.KEY_IS_CATEGORY_EVENT_ACTIVE, isCategoryEventActive);
-        }
+        Gson gson = new Gson();
+        String categoriesStr = gson.toJson(categories);
+        editor.putString(KeyStore.KEY_CATEGORIES, categoriesStr);
 
         editor.apply();
     }

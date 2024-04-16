@@ -55,7 +55,6 @@ public class NewEventUtils {
             Event event = new Event(eventId, splitMessage[0], splitMessage[1], splitMessage[2], Boolean.parseBoolean(splitMessage[3]));
             events.add(event);
 
-
             Gson gson = new Gson();
             String eventsStr = gson.toJson(events);
             saveDataToSharedPreference(context, eventsStr);

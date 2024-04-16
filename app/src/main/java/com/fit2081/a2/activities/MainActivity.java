@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
+import com.fit2081.a2.components.CategoryList;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         }, 0);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewCreate, new CreateEventForm()).addToBackStack("f1").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_category_list, new CategoryList()).addToBackStack("f1").commit();
 
         // Find views
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -139,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.view_all_categories:
-                    Toast.makeText(this, "Clicked View All Categories", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(this, ViewAllCategoriesActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.add_category:
                     intent = new Intent(this, NewEventCategoryActivity.class);
@@ -186,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Clicked Delete All Events", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.option_refresh:
-                Toast.makeText(this, "Clicked Refresh", Toast.LENGTH_SHORT).show();
+                CategoryList fragment = (CategoryList) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
+                fragment.refreshView();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -3,12 +3,24 @@ package com.fit2081.a2.components;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
+import com.fit2081.a2.schemas.Category;
+import com.fit2081.a2.schemas.Event;
+import com.fit2081.a2.utils.CategoryListAdapter;
+import com.fit2081.a2.utils.EventListAdapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +37,9 @@ public class CategoryList extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ArrayList<Category> categories = new ArrayList<>();
+    CategoryListAdapter categoryListAdapter;
+    private RecyclerView recyclerView;
 
     public CategoryList() {
         // Required empty public constructor
@@ -55,6 +70,16 @@ public class CategoryList extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        categoryListAdapter = new CategoryListAdapter();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.category_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        categoryListAdapter.setData(categories);
+        recyclerView.setAdapter(categoryListAdapter);
     }
 
     @Override
@@ -62,5 +87,14 @@ public class CategoryList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_category_list, container, false);
+    }
+
+    public void refreshView() {
+        Gson gson = new Gson();
+        String categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
+        categoryListAdapter.setData(dbCategories);
+        categoryListAdapter.notifyDataSetChanged();
     }
 }
