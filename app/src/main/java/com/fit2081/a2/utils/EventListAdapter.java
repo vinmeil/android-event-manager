@@ -16,8 +16,6 @@ import java.util.ArrayList;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
     ArrayList<Event> data = new ArrayList<Event>();
-    private static final int ITEM_HEADER = 0;
-    private static final int ITEM_CHILD = 1;
 
     public void setData(ArrayList<Event> data) {
         this.data = data;
@@ -29,15 +27,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_list_item, parent, false); //CardView inflated as RecyclerView list item
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return ITEM_HEADER;
-        } else {
-            return ITEM_CHILD;
-        }
     }
 
     @Override
