@@ -1,7 +1,5 @@
 package com.fit2081.a2.utils;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -20,6 +18,7 @@ import java.util.ArrayList;
 
 public class NewEventUtils {
     private static ArrayList<Event> events = new ArrayList<>();
+    private static Gson gson = new Gson();
     public static void onCreateNewEventButtonClick(
             Context context,
             View view,
@@ -30,13 +29,14 @@ public class NewEventUtils {
             String[] splitMessage,
             Switch isEventActive
     ) {
+
         String eventId = etEventId.getText().toString().isEmpty() ? generateEventId() : etEventId.getText().toString();
         String[] temporaryMessage = new String[4];
         temporaryMessage[0] = etEventName.getText().toString();
         temporaryMessage[1] = etEventCategoryId.getText().toString();
         temporaryMessage[2] = etTicketsAvailable.getText().toString();
         temporaryMessage[3] = String.valueOf(isEventActive.isChecked());
-        boolean isValid = checkValidMessage(temporaryMessage);
+        boolean isValid = checkValidMessage(context, temporaryMessage);
 
         if (isValid) {
             splitMessage = temporaryMessage;
@@ -49,20 +49,44 @@ public class NewEventUtils {
                 splitMessage[3] = "false";
             }
 
-            Gson gson = new Gson();
             SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
             String getEventsStr = sharedPreferences.getString(KeyStore.KEY_EVENTS, "");
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
             events = gson.fromJson(getEventsStr, type);
 
+            if (events == null) {
+                events = new ArrayList<>();
+            }
+
             Event event = new Event(eventId, splitMessage[0], splitMessage[1], splitMessage[2], Boolean.parseBoolean(splitMessage[3]));
             events.add(event);
 
             String eventsStr = gson.toJson(events);
-            saveDataToSharedPreference(context, eventsStr);
+            saveEventsToSharedPreference(context, eventsStr);
             Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            String eventCategoryId = event.getEventCategoryId();
+                            Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+                            String getCategoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
+                            ArrayList<Category> categories = gson.fromJson(getCategoriesStr, type);
+
+                            if (categories == null) {
+                                categories = new ArrayList<>();
+                            }
+
+                            for (Category category: categories) {
+                                if (category.getCategoryId().equalsIgnoreCase(eventCategoryId)) {
+                                    category.decrementEventCount();
+                                    break;
+                                }
+                            }
+
+                            events.remove(event);
+                            String newEventsStr = gson.toJson(events);
+                            String newCategoriesStr = gson.toJson(categories);
+                            saveEventsToSharedPreference(context, newEventsStr);
+                            saveCategoriesToSharedPreference(context, newCategoriesStr);
                             Snackbar.make(view, "Undid Save Event", Snackbar.LENGTH_SHORT).show();
                         }
                     }).show();
@@ -71,7 +95,7 @@ public class NewEventUtils {
         }
     }
 
-    public static boolean checkValidMessage(String[] splitMessage) {
+    public static boolean checkValidMessage(Context context, String[] splitMessage) {
         boolean isValid = true;
         if (splitMessage.length != 4) {
             isValid = false;
@@ -84,11 +108,9 @@ public class NewEventUtils {
                 isValid = false;
             }
 
-            if (!eventName.matches("[a-zA-Z0-9 ]+")) {
+            if (!eventName.matches("[a-zA-Z0-9 ]+")  || !eventName.matches(".*[a-zA-Z].*")) {
                 isValid = false;
             }
-
-            // TODO: Check if categoryId exists in shared preferences.
 
             if (!ticketsAvailable.isEmpty()) {
                 try {
@@ -104,6 +126,35 @@ public class NewEventUtils {
 
             if (!isEventActive.isEmpty() && !isEventActive.equalsIgnoreCase("true") && !isEventActive.equalsIgnoreCase("false")) {
                 isValid = false;
+            }
+
+            // Increment event count only if it is valid
+            if (isValid) {
+                SharedPreferences sharedPref = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
+                String getCategoriesStr = sharedPref.getString(KeyStore.KEY_CATEGORIES, "");
+                Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+                ArrayList<Category> categories = gson.fromJson(getCategoriesStr, type);
+                if (categories == null) {
+                    categories = new ArrayList<>();
+                }
+
+                boolean isCategoryIdValid = false;
+                for (Category category : categories) {
+                    if (eventCategoryId.equalsIgnoreCase(category.getCategoryId())) {
+                        isCategoryIdValid = true;
+                        category.incrementEventCount();
+                        break;
+                    }
+                }
+
+                String newCategoriesStr = gson.toJson(categories);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyStore.KEY_CATEGORIES, newCategoriesStr);
+                editor.apply();
+
+                if (!isCategoryIdValid) {
+                    isValid = false;
+                }
             }
         }
 
@@ -124,11 +175,19 @@ public class NewEventUtils {
         return eventId;
     }
 
-    private static void saveDataToSharedPreference(Context context, String events) {
+    private static void saveEventsToSharedPreference(Context context, String events) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString(KeyStore.KEY_EVENTS, events);
+        editor.apply();
+    }
+
+    private static void saveCategoriesToSharedPreference(Context context, String categories) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(KeyStore.KEY_CATEGORIES, categories);
         editor.apply();
     }
 }

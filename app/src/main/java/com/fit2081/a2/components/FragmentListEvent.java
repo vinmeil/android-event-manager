@@ -94,6 +94,10 @@ public class FragmentListEvent extends Fragment {
         String events = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_EVENTS, "");
         Type type = new TypeToken<ArrayList<Event>>() {}.getType();
         ArrayList<Event> dbEvents = gson.fromJson(events, type);
+        if (dbEvents == null) {
+            dbEvents = new ArrayList<>();
+        }
+
         eventListAdapter.setData(dbEvents);
         eventListAdapter.notifyDataSetChanged();
     }

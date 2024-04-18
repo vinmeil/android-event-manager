@@ -148,7 +148,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
                 isValid = false;
             }
 
-            if (!categoryName.matches("[a-zA-Z0-9 ]+")) {
+            if (!categoryName.matches("[a-zA-Z0-9 ]+")  || !categoryName.matches(".*[a-zA-Z].*")) {
                 isValid = false;
             }
 

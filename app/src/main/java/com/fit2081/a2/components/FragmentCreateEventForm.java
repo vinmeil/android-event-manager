@@ -109,7 +109,7 @@ public class FragmentCreateEventForm extends Fragment {
             boolean isMessageValid;
             if (isCorrectIdentifier) {
                 splitMessage = identifier[1].split(";", -1);;
-                isMessageValid = NewEventUtils.checkValidMessage(splitMessage);
+                isMessageValid = NewEventUtils.checkValidMessage(context, splitMessage);
             } else {
                 isMessageValid = false;
             }

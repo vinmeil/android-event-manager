@@ -17,24 +17,25 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
 import com.fit2081.a2.components.FragmentListCategory;
 import com.fit2081.a2.schemas.Category;
+import com.fit2081.a2.schemas.Event;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import com.fit2081.a2.components.FragmentCreateEventForm;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements FragmentListCategory.onDataUpdateListener {
+public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -105,21 +106,11 @@ public class MainActivity extends AppCompatActivity implements FragmentListCateg
     @Override
     protected void onResume() {
         super.onResume();
-        getCategoriesFromSharedPreferences();
+        getDisplayedCategoriesFromSharedPreferences();
         FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
         fragment.displayData(displayedCategories);
     }
 
-    @Override
-    public void onDataUpdate(ArrayList<Category> categories) {
-        displayedCategories = categories;
-        saveCategoriesToSharedPreferences();
-    }
-
-    @Override
-    public ArrayList<Category> getData() {
-        return null;
-    }
 
     private void saveCategoriesToSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
@@ -130,12 +121,26 @@ public class MainActivity extends AppCompatActivity implements FragmentListCateg
         editor.apply();
     }
 
-    private void getCategoriesFromSharedPreferences() {
+    private void getAllCategoriesFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        displayedCategories = gson.fromJson(categoriesStr, type);
+        if (displayedCategories == null) {
+            displayedCategories = new ArrayList<>();
+        }
+    }
+
+    private void getDisplayedCategoriesFromSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
         Gson gson = new Gson();
         String mainCategoriesStr = sharedPreferences.getString(KeyStore.KEY_MAIN_CATEGORIES, "");
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         displayedCategories = gson.fromJson(mainCategoriesStr, type);
+        if (displayedCategories == null) {
+            displayedCategories = new ArrayList<>();
+        }
     }
 
     private void awaitFragmentCreated() {
@@ -171,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements FragmentListCateg
                             );
                         }
                     });
+                } else if (fragment instanceof FragmentListCategory) {
+                    getAllCategoriesFromSharedPreferences();
+                    FragmentListCategory fragmentListCategory = (FragmentListCategory) fragment;
+                    fragmentListCategory.displayData(displayedCategories);
                 }
             }
         }, false);
@@ -219,22 +228,87 @@ public class MainActivity extends AppCompatActivity implements FragmentListCateg
             return true;
         }
 
+        FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
         switch (item.getItemId()) {
             case R.id.option_clear_event_form:
-                Toast.makeText(this, "Clicked Clear Event Form", Toast.LENGTH_SHORT).show();
+                etEventId.setText("");
+                etEventCategoryId.setText("");
+                etEventName.setText("");
+                etTicketsAvailable.setText("");
+                isEventActive.setChecked(false);
+                Snackbar.make(findViewById(R.id.fragmentViewCreate), "Cleared form", Snackbar.LENGTH_SHORT).show();
                 return true;
             case R.id.option_delete_all_categories:
-                Toast.makeText(this, "Clicked Delete All Categories", Toast.LENGTH_SHORT).show();
+                deleteAllCategories();
+                fragment.refreshView();
                 return true;
             case R.id.option_delete_all_events:
-                Toast.makeText(this, "Clicked Delete All Events", Toast.LENGTH_SHORT).show();
+                deleteAllEvents();
+                fragment.refreshView();
                 return true;
             case R.id.option_refresh:
-                FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
+                Gson gson = new Gson();
+                String categoriesStr = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE).getString(KeyStore.KEY_CATEGORIES, "");
+                Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+                ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
+                if (dbCategories == null) {
+                    dbCategories = new ArrayList<>();
+                }
+
+                displayedCategories = dbCategories;
+                saveCategoriesToSharedPreferences();
                 fragment.refreshView();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void deleteAllCategories() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(KeyStore.KEY_MAIN_CATEGORIES);
+        editor.remove(KeyStore.KEY_CATEGORIES);
+        editor.apply();
+        displayedCategories.clear();
+
+        FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
+        fragment.refreshView();
+    }
+
+    private void deleteAllEvents() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String allEventsStr = sharedPreferences.getString(KeyStore.KEY_EVENTS, "");
+        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
+        Gson gson = new Gson();
+        Type eventType = new TypeToken<ArrayList<Event>>() {}.getType();
+        Type categoryType = new TypeToken<ArrayList<Category>>() {}.getType();
+        ArrayList<Event> allEvents = gson.fromJson(allEventsStr, eventType);
+        ArrayList<Category> categories = gson.fromJson(categoriesStr, categoryType);
+
+        if (allEvents == null) {
+            allEvents = new ArrayList<>();
+        }
+
+        if (categories == null) {
+            categories = new ArrayList<>();
+        }
+
+        for (Event event: allEvents) {
+            String eventCategoryId = event.getEventCategoryId();
+            for (Category category: categories) {
+                if (category.getCategoryId().equalsIgnoreCase(eventCategoryId)) {
+                    category.decrementEventCount();
+                    break;
+                }
+            }
+        }
+
+        String newCategoriesStr = gson.toJson(categories);
+        editor.putString(KeyStore.KEY_CATEGORIES, newCategoriesStr);
+        editor.remove(KeyStore.KEY_EVENTS);
+        editor.apply();
     }
 }

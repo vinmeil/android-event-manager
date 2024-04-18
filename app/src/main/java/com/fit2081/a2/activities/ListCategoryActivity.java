@@ -16,7 +16,7 @@ import com.fit2081.a2.schemas.Category;
 
 import java.util.ArrayList;
 
-public class ListCategoryActivity extends AppCompatActivity implements FragmentListCategory.onDataUpdateListener{
+public class ListCategoryActivity extends AppCompatActivity {
     public ArrayList<Category> displayedCategories = new ArrayList<>();
 
     @Override
@@ -28,15 +28,7 @@ public class ListCategoryActivity extends AppCompatActivity implements FragmentL
         awaitFragmentCreated();
     }
 
-    @Override
-    public void onDataUpdate(ArrayList<Category> data) {
-        displayedCategories = data;
-    }
 
-    @Override
-    public ArrayList<Category> getData() {
-        return displayedCategories;
-    }
 
     private void awaitFragmentCreated() {
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {

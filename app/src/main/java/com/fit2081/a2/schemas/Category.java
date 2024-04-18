@@ -38,6 +38,10 @@ public class Category {
     }
 
     public void incrementEventCount() {
+        if (categoryEventCount == null || categoryEventCount.isEmpty()) {
+            categoryEventCount = "0";
+        }
+
         int count = Integer.parseInt(categoryEventCount);
         count++;
         this.categoryEventCount = String.valueOf(count);

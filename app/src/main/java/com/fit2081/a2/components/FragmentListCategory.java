@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
+import com.fit2081.a2.activities.MainActivity;
 import com.fit2081.a2.schemas.Category;
 import com.fit2081.a2.utils.CategoryListAdapter;
 import com.google.gson.Gson;
@@ -34,12 +35,6 @@ public class FragmentListCategory extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public interface onDataUpdateListener {
-        void onDataUpdate(ArrayList<Category> data);
-        ArrayList<Category> getData();
-    }
-
-    onDataUpdateListener onDataUpdateListener;
     ArrayList<Category> categories = new ArrayList<>();
     CategoryListAdapter categoryListAdapter;
     private RecyclerView recyclerView;
@@ -79,7 +74,6 @@ public class FragmentListCategory extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        onDataUpdateListener = (onDataUpdateListener) context;
     }
 
     @Override
@@ -99,11 +93,18 @@ public class FragmentListCategory extends Fragment {
 
     public void refreshView() {
         Gson gson = new Gson();
-        String categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
+        String categoriesStr;
+        if (getActivity() instanceof MainActivity) {
+            categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_MAIN_CATEGORIES, "");
+        } else {
+            categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
+        }
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
 
-        onDataUpdateListener.onDataUpdate(dbCategories);
+        if (dbCategories == null) {
+            dbCategories = new ArrayList<>();
+        }
 
         categoryListAdapter.setData(dbCategories);
         categoryListAdapter.notifyDataSetChanged();

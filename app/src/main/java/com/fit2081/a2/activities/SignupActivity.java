@@ -41,7 +41,9 @@ public class SignupActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString();
         String toastMessage = null;
 
-        if (password.equals(confirmPassword)) {
+        if (password.equals(confirmPassword)
+                && username.matches("[a-zA-Z0-9 ]+")
+                && username.matches(".*[a-zA-Z].*")) {
             // Save the username and password to SharedPreferences
             saveDataToSharedPreferences(username, password);
             toastMessage = String.format("User %s has been registered successfully!", username);
