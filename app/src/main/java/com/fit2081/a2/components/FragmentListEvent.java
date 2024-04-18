@@ -22,10 +22,10 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EventList#newInstance} factory method to
+ * Use the {@link FragmentListEvent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventList extends Fragment {
+public class FragmentListEvent extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +40,7 @@ public class EventList extends Fragment {
     EventListAdapter eventListAdapter;
     private RecyclerView recyclerView;
 
-    public EventList() {
+    public FragmentListEvent() {
         // Required empty public constructor
     }
 
@@ -53,8 +53,8 @@ public class EventList extends Fragment {
      * @return A new instance of fragment EventList.
      */
     // TODO: Rename and change types and number of parameters
-    public static EventList newInstance(String param1, String param2) {
-        EventList fragment = new EventList();
+    public static FragmentListEvent newInstance(String param1, String param2) {
+        FragmentListEvent fragment = new FragmentListEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

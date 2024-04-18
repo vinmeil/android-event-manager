@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fit2081.a2.R;
-import com.fit2081.a2.components.EventList;
+import com.fit2081.a2.components.FragmentListEvent;
 
 public class ViewAllEventsActivity extends AppCompatActivity {
 
@@ -15,7 +15,7 @@ public class ViewAllEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all_events);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentAllEventList, new EventList()).addToBackStack("f1").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentAllEventList, new FragmentListEvent()).addToBackStack("f1").commit();
 
     }
 

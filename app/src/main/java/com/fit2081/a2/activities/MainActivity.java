@@ -21,12 +21,12 @@ import android.widget.Toast;
 
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
-import com.fit2081.a2.components.CategoryList;
+import com.fit2081.a2.components.FragmentListCategory;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import com.fit2081.a2.components.CreateEventForm;
+import com.fit2081.a2.components.FragmentCreateEventForm;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -59,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.READ_SMS
         }, 0);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewCreate, new CreateEventForm()).addToBackStack("f1").commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_category_list, new CategoryList()).addToBackStack("f1").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewCreate, new FragmentCreateEventForm()).addToBackStack("f1").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_category_list, new FragmentListCategory()).addToBackStack("f1").commit();
 
         // Find views
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         fab = findViewById(R.id.fab);
 
-        CreateEventForm createEventForm = (CreateEventForm) getSupportFragmentManager().findFragmentById(R.id.fragmentViewCreate);
+        FragmentCreateEventForm createEventForm = (FragmentCreateEventForm) getSupportFragmentManager().findFragmentById(R.id.fragmentViewCreate);
 
         // Drawer layout toggle
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             ) {
                 super.onFragmentViewCreated(fragmentManager, fragment, view, savedInstanceState);
 
-                if (fragment instanceof CreateEventForm) {
+                if (fragment instanceof FragmentCreateEventForm) {
                     etEventId = view.findViewById(R.id.editTextEventId);
                     etEventName = view.findViewById(R.id.editTextEventName);
                     etEventCategoryId = view.findViewById(R.id.editTextEventCategoryId);
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Clicked Delete All Events", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.option_refresh:
-                CategoryList fragment = (CategoryList) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
+                FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
                 fragment.refreshView();
                 return true;
             default:

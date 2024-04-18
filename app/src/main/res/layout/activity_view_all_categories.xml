@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_view_all_categories_activity"
-        android:name="com.fit2081.a2.components.CategoryList"
+        android:name="com.fit2081.a2.components.FragmentListCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="196dp"

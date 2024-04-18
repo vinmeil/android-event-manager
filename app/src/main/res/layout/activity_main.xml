@@ -26,13 +26,13 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fragment_main_category_list"
-                    android:name="com.fit2081.a2.components.CategoryList"
+                    android:name="com.fit2081.a2.components.FragmentListCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fragmentViewCreate"
-                    android:name="com.fit2081.a2.components.CreateEventForm"
+                    android:name="com.fit2081.a2.components.FragmentCreateEventForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
 import com.fit2081.a2.schemas.Category;
-import com.fit2081.a2.schemas.Event;
 import com.fit2081.a2.utils.CategoryListAdapter;
-import com.fit2081.a2.utils.EventListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -24,10 +22,10 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CategoryList#newInstance} factory method to
+ * Use the {@link FragmentListCategory#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryList extends Fragment {
+public class FragmentListCategory extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,7 +39,7 @@ public class CategoryList extends Fragment {
     CategoryListAdapter categoryListAdapter;
     private RecyclerView recyclerView;
 
-    public CategoryList() {
+    public FragmentListCategory() {
         // Required empty public constructor
     }
 
@@ -54,8 +52,8 @@ public class CategoryList extends Fragment {
      * @return A new instance of fragment CategoryList.
      */
     // TODO: Rename and change types and number of parameters
-    public static CategoryList newInstance(String param1, String param2) {
-        CategoryList fragment = new CategoryList();
+    public static FragmentListCategory newInstance(String param1, String param2) {
+        FragmentListCategory fragment = new FragmentListCategory();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

@@ -21,10 +21,10 @@ import com.fit2081.a2.utils.SMSReceiver;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CreateEventForm#newInstance} factory method to
+ * Use the {@link FragmentCreateEventForm#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateEventForm extends Fragment {
+public class FragmentCreateEventForm extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,9 +38,9 @@ public class CreateEventForm extends Fragment {
     EditText etEventId, etEventName, etEventCategoryId, etTicketsAvailable;
     Switch isEventActive;
     String[] splitMessage;
-    CreateEventForm.EventBroadCastReceiver eventBroadCastReceiver;
+    FragmentCreateEventForm.EventBroadCastReceiver eventBroadCastReceiver;
 
-    public CreateEventForm() {
+    public FragmentCreateEventForm() {
         // Required empty public constructor
     }
 
@@ -53,8 +53,8 @@ public class CreateEventForm extends Fragment {
      * @return A new instance of fragment CreateEventFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateEventForm newInstance(String param1, String param2) {
-        CreateEventForm fragment = new CreateEventForm();
+    public static FragmentCreateEventForm newInstance(String param1, String param2) {
+        FragmentCreateEventForm fragment = new FragmentCreateEventForm();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -85,7 +85,7 @@ public class CreateEventForm extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        eventBroadCastReceiver = new CreateEventForm.EventBroadCastReceiver();
+        eventBroadCastReceiver = new FragmentCreateEventForm.EventBroadCastReceiver();
         getActivity().registerReceiver(eventBroadCastReceiver, new IntentFilter(SMSReceiver.SMS_FILTER), getActivity().RECEIVER_EXPORTED);
     }
 

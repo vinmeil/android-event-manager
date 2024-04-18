@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.fit2081.a2.R;
-import com.fit2081.a2.components.CategoryList;
+import com.fit2081.a2.components.FragmentListCategory;
 
 public class ViewAllCategoriesActivity extends AppCompatActivity {
 
@@ -20,7 +20,7 @@ public class ViewAllCategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all_categories);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_view_all_categories_activity, new CategoryList()).addToBackStack("f1").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_view_all_categories_activity, new FragmentListCategory()).addToBackStack("f1").commit();
         waitForFragmentCreated();
     }
 
@@ -35,8 +35,8 @@ public class ViewAllCategoriesActivity extends AppCompatActivity {
             ) {
                 super.onFragmentViewCreated(fragmentManager, fragment, view, savedInstanceState);
 
-                if (fragment instanceof CategoryList) {
-                    ((CategoryList) fragment).refreshView();
+                if (fragment instanceof FragmentListCategory) {
+                    ((FragmentListCategory) fragment).refreshView();
                 }
             }
         }, false);
