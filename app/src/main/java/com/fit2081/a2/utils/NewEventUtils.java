@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 
 import com.fit2081.a2.KeyStore;
+import com.fit2081.a2.schemas.Category;
 import com.fit2081.a2.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -44,34 +45,27 @@ public class NewEventUtils {
             etTicketsAvailable.setText("");
             isEventActive.setChecked(false);
 
-            if (splitMessage[2].isEmpty()) {
-                splitMessage[2] = "-";
-            }
-
             if (splitMessage[3].isEmpty()) {
                 splitMessage[3] = "false";
             }
 
+            Gson gson = new Gson();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
+            String getEventsStr = sharedPreferences.getString(KeyStore.KEY_EVENTS, "");
+            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+            events = gson.fromJson(getEventsStr, type);
+
             Event event = new Event(eventId, splitMessage[0], splitMessage[1], splitMessage[2], Boolean.parseBoolean(splitMessage[3]));
             events.add(event);
 
-            Gson gson = new Gson();
             String eventsStr = gson.toJson(events);
             saveDataToSharedPreference(context, eventsStr);
-            Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", new View.OnClickListener() {
+            Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Snackbar.make(view, "Undo Save Event", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(view, "Undid Save Event", Snackbar.LENGTH_SHORT).show();
                         }
                     }).show();
-
-            String getEvents = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE).getString(KeyStore.KEY_EVENTS, "");
-            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-            ArrayList<Event> dbEvents = gson.fromJson(getEvents, type);
-            if (dbEvents != null) {
-                // do something here
-            }
         } else {
             Snackbar.make(view, "Invalid inputs in fields!", Snackbar.LENGTH_SHORT).show();
         }

@@ -37,6 +37,18 @@ public class Category {
         this.categoryEventCount = categoryEventCount;
     }
 
+    public void incrementEventCount() {
+        int count = Integer.parseInt(categoryEventCount);
+        count++;
+        this.categoryEventCount = String.valueOf(count);
+    }
+
+    public void decrementEventCount() {
+        int count = Integer.parseInt(categoryEventCount);
+        count--;
+        this.categoryEventCount = String.valueOf(count);
+    }
+
     public boolean isCategoryEventActive() {
         return isCategoryEventActive;
     }

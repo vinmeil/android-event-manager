@@ -80,10 +80,6 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         if (isValid) {
             splitMessage = temporaryMessage;
 
-            if (splitMessage[1].isEmpty()) {
-                splitMessage[1] = "-";
-            }
-
             if (splitMessage[2].isEmpty()) {
                 splitMessage[2] = "false";
             }
