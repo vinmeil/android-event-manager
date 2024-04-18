@@ -22,13 +22,19 @@ import android.widget.Toast;
 import com.fit2081.a2.KeyStore;
 import com.fit2081.a2.R;
 import com.fit2081.a2.components.FragmentListCategory;
+import com.fit2081.a2.schemas.Category;
 import com.fit2081.a2.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import com.fit2081.a2.components.FragmentCreateEventForm;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-public class MainActivity extends AppCompatActivity {
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements FragmentListCategory.onDataUpdateListener {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etEventId, etEventName, etEventCategoryId, etTicketsAvailable;
     Switch isEventActive;
     String[] splitMessage;
+    public ArrayList<Category> displayedCategories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.nav_view);
         fab = findViewById(R.id.fab);
 
-        FragmentCreateEventForm createEventForm = (FragmentCreateEventForm) getSupportFragmentManager().findFragmentById(R.id.fragmentViewCreate);
-
         // Drawer layout toggle
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupNavigationMenu();
-        waitForFragmentCreated();
+        awaitFragmentCreated();
 
         // Add listener to the floating action button
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +102,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void waitForFragmentCreated() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCategoriesFromSharedPreferences();
+        FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
+        fragment.displayData(displayedCategories);
+    }
+
+    @Override
+    public void onDataUpdate(ArrayList<Category> categories) {
+        displayedCategories = categories;
+        saveCategoriesToSharedPreferences();
+    }
+
+    @Override
+    public ArrayList<Category> getData() {
+        return null;
+    }
+
+    private void saveCategoriesToSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String mainCategoriesStr = gson.toJson(displayedCategories);
+        editor.putString(KeyStore.KEY_MAIN_CATEGORIES, mainCategoriesStr);
+        editor.apply();
+    }
+
+    private void getCategoriesFromSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String mainCategoriesStr = sharedPreferences.getString(KeyStore.KEY_MAIN_CATEGORIES, "");
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        displayedCategories = gson.fromJson(mainCategoriesStr, type);
+    }
+
+    private void awaitFragmentCreated() {
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentViewCreated(
@@ -141,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.view_all_categories:
-                    intent = new Intent(this, ViewAllCategoriesActivity.class);
+                    intent = new Intent(this, ListCategoryActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.add_category:
@@ -149,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.view_all_events:
-                    intent = new Intent(this, ViewAllEventsActivity.class);
+                    intent = new Intent(this, ListEventActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.logout:

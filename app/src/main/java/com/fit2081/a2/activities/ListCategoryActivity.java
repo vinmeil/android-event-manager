@@ -12,8 +12,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.fit2081.a2.R;
 import com.fit2081.a2.components.FragmentListCategory;
+import com.fit2081.a2.schemas.Category;
 
-public class ViewAllCategoriesActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ListCategoryActivity extends AppCompatActivity implements FragmentListCategory.onDataUpdateListener{
+    public ArrayList<Category> displayedCategories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +25,20 @@ public class ViewAllCategoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_all_categories);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_view_all_categories_activity, new FragmentListCategory()).addToBackStack("f1").commit();
-        waitForFragmentCreated();
+        awaitFragmentCreated();
     }
 
-    private void waitForFragmentCreated() {
+    @Override
+    public void onDataUpdate(ArrayList<Category> data) {
+        displayedCategories = data;
+    }
+
+    @Override
+    public ArrayList<Category> getData() {
+        return displayedCategories;
+    }
+
+    private void awaitFragmentCreated() {
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentViewCreated(

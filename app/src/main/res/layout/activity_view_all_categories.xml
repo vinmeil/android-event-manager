@@ -5,13 +5,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ViewAllCategoriesActivity">
+    tools:context=".activities.ListCategoryActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_view_all_categories_activity"
         android:name="com.fit2081.a2.components.FragmentListCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="196dp"
-        tools:layout_editor_absoluteY="5dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

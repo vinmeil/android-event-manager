@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -40,6 +41,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         etCategoryName = findViewById(R.id.editTextCategoryName);
         etCategoryEventCount = findViewById(R.id.editTextCategoryCount);
         isCategoryEventActive = findViewById(R.id.switchCategoryIsActive);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         etCategoryId.setFocusable(false);
     }
@@ -55,6 +57,16 @@ public class NewEventCategoryActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(eventCategoryBroadCastReceiver);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onCreateNewCategoryButtonClick(View view) {

@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.fit2081.a2.R;
 import com.fit2081.a2.components.FragmentListEvent;
 
-public class ViewAllEventsActivity extends AppCompatActivity {
+public class ListEventActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

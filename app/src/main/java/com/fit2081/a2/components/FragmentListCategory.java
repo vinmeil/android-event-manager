@@ -1,7 +1,9 @@
 package com.fit2081.a2.components;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,15 +28,18 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class FragmentListCategory extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    // Not sure what these do, I'll leave them here
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public interface onDataUpdateListener {
+        void onDataUpdate(ArrayList<Category> data);
+        ArrayList<Category> getData();
+    }
+
+    onDataUpdateListener onDataUpdateListener;
     ArrayList<Category> categories = new ArrayList<>();
     CategoryListAdapter categoryListAdapter;
     private RecyclerView recyclerView;
@@ -72,6 +77,12 @@ public class FragmentListCategory extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        onDataUpdateListener = (onDataUpdateListener) context;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.category_list);
@@ -83,7 +94,6 @@ public class FragmentListCategory extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_category_list, container, false);
     }
 
@@ -92,7 +102,16 @@ public class FragmentListCategory extends Fragment {
         String categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
+
+        onDataUpdateListener.onDataUpdate(dbCategories);
+
         categoryListAdapter.setData(dbCategories);
+        categoryListAdapter.notifyDataSetChanged();
+    }
+
+    public void displayData(ArrayList<Category> data) {
+        categories = data;
+        categoryListAdapter.setData(categories);
         categoryListAdapter.notifyDataSetChanged();
     }
 }

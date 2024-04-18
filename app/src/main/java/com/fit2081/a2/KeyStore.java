@@ -16,4 +16,5 @@ public class KeyStore {
     public static String KEY_IS_EVENT_ACTIVE = "KEY_IS_EVENT_ACTIVE";
     public static String KEY_EVENTS = "KEY_EVENTS";
     public static String KEY_CATEGORIES = "KEY_CATEGORIES";
+    public static String KEY_MAIN_CATEGORIES = "KEY_MAIN_CATEGORIES";
 }
