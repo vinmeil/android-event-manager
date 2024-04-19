@@ -5,8 +5,12 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.fit2081.a2.KeyStore;
+import com.fit2081.a2.components.FragmentListCategory;
 import com.fit2081.a2.schemas.Category;
 import com.fit2081.a2.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
@@ -90,8 +94,6 @@ public class NewEventUtils {
                             Snackbar.make(view, "Undid Save Event", Snackbar.LENGTH_SHORT).show();
                         }
                     }).show();
-        } else {
-            Snackbar.make(view, "Invalid inputs in fields!", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -106,10 +108,12 @@ public class NewEventUtils {
             String isEventActive = splitMessage[3];
             if (eventName.isEmpty() || eventCategoryId.isEmpty()) {
                 isValid = false;
+                Toast.makeText(context, "Event Name and Category ID cannot be empty", Toast.LENGTH_SHORT).show();
             }
 
             if (!eventName.matches("[a-zA-Z0-9 ]+")  || !eventName.matches(".*[a-zA-Z].*")) {
                 isValid = false;
+                Toast.makeText(context, "Invalid Event Name", Toast.LENGTH_SHORT).show();
             }
 
             if (!ticketsAvailable.isEmpty()) {
@@ -118,6 +122,7 @@ public class NewEventUtils {
 
                     if (ticketsAvailableInt <= 0) {
                         isValid = false;
+                        Toast.makeText(context, "Invalid Event Count", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     isValid = false;
@@ -154,6 +159,7 @@ public class NewEventUtils {
 
                 if (!isCategoryIdValid) {
                     isValid = false;
+                    Toast.makeText(context, "Category does not exist", Toast.LENGTH_SHORT).show();
                 }
             }
         }

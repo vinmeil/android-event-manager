@@ -94,11 +94,7 @@ public class FragmentListCategory extends Fragment {
     public void refreshView() {
         Gson gson = new Gson();
         String categoriesStr;
-        if (getActivity() instanceof MainActivity) {
-            categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_MAIN_CATEGORIES, "");
-        } else {
-            categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
-        }
+        categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
 
@@ -114,5 +110,12 @@ public class FragmentListCategory extends Fragment {
         categories = data;
         categoryListAdapter.setData(categories);
         categoryListAdapter.notifyDataSetChanged();
+    }
+
+    public ArrayList<Category> getData() {
+        Gson gson = new Gson();
+        String categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        return gson.fromJson(categoriesStr, type);
     }
 }

@@ -91,8 +91,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             System.out.println(categoriesDb.size());
             saveDataToSharedPreference(categoriesDb);
 
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "Invalid inputs in fields!", Toast.LENGTH_SHORT).show();
         }
@@ -146,17 +145,24 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             String isCategoryEventActive = splitMessage[2];
             if (categoryName.isEmpty()) {
                 isValid = false;
+                Toast.makeText(this, "Category name is empty!", Toast.LENGTH_SHORT).show();
             }
 
             if (!categoryName.matches("[a-zA-Z0-9 ]+")  || !categoryName.matches(".*[a-zA-Z].*")) {
                 isValid = false;
+                Toast.makeText(this, "Invalid category name", Toast.LENGTH_SHORT).show();
             }
 
             if (!categoryEventCount.isEmpty()) {
                 try {
-                    Integer.parseInt(categoryEventCount);
+                    int eventCountInt = Integer.parseInt(categoryEventCount);
+                    if (eventCountInt <= 0) {
+                        isValid = false;
+                        Toast.makeText(this, "Invalid event count", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     isValid = false;
+                    Toast.makeText(this, "Invalid event count", Toast.LENGTH_SHORT).show();
                 }
             }
 

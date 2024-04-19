@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -45,10 +47,19 @@ public class MainActivity extends AppCompatActivity {
     String[] splitMessage;
     public ArrayList<Category> displayedCategories = new ArrayList<>();
 
+    // REMOVE LATER
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(this, new String[]{
+                android.Manifest.permission.SEND_SMS,
+                android.Manifest.permission.RECEIVE_SMS,
+                android.Manifest.permission.READ_SMS
+        }, 0);
 
         SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
         String username = sharedPreferences.getString(KeyStore.KEY_USERNAME, null);
@@ -58,14 +69,7 @@ public class MainActivity extends AppCompatActivity {
             // User is not logged in, redirect to Sign Up activity
             Intent intent = new Intent(this, SignupActivity.class);
             startActivity(intent);
-            finish();
         }
-
-        ActivityCompat.requestPermissions(this, new String[]{
-                android.Manifest.permission.SEND_SMS,
-                android.Manifest.permission.RECEIVE_SMS,
-                android.Manifest.permission.READ_SMS
-        }, 0);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewCreate, new FragmentCreateEventForm()).addToBackStack("f1").commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_main_category_list, new FragmentListCategory()).addToBackStack("f1").commit();
@@ -83,64 +87,18 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupNavigationMenu();
-        awaitFragmentCreated();
 
-        // Add listener to the floating action button
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NewEventUtils.onCreateNewEventButtonClick(
-                        MainActivity.this,
-                        view,
-                        etEventId,
-                        etEventName,
-                        etEventCategoryId,
-                        etTicketsAvailable,
-                        splitMessage,
-                        isEventActive
-                );
-            }
-        });
+        // Gets executed when fragments are created
+        Log.d(TAG, "onCreate");
+        awaitFragmentCreated();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getDisplayedCategoriesFromSharedPreferences();
+        Log.d(TAG, "onResume");
         FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
         fragment.displayData(displayedCategories);
-    }
-
-
-    private void saveCategoriesToSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String mainCategoriesStr = gson.toJson(displayedCategories);
-        editor.putString(KeyStore.KEY_MAIN_CATEGORIES, mainCategoriesStr);
-        editor.apply();
-    }
-
-    private void getAllCategoriesFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        displayedCategories = gson.fromJson(categoriesStr, type);
-        if (displayedCategories == null) {
-            displayedCategories = new ArrayList<>();
-        }
-    }
-
-    private void getDisplayedCategoriesFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String mainCategoriesStr = sharedPreferences.getString(KeyStore.KEY_MAIN_CATEGORIES, "");
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        displayedCategories = gson.fromJson(mainCategoriesStr, type);
-        if (displayedCategories == null) {
-            displayedCategories = new ArrayList<>();
-        }
     }
 
     private void awaitFragmentCreated() {
@@ -177,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } else if (fragment instanceof FragmentListCategory) {
-                    getAllCategoriesFromSharedPreferences();
                     FragmentListCategory fragmentListCategory = (FragmentListCategory) fragment;
-                    fragmentListCategory.displayData(displayedCategories);
+                    fragmentListCategory.refreshView();
+                    displayedCategories = fragmentListCategory.getData();
                 }
             }
         }, false);
@@ -211,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     break;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
     }
@@ -247,16 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment.refreshView();
                 return true;
             case R.id.option_refresh:
-                Gson gson = new Gson();
-                String categoriesStr = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE).getString(KeyStore.KEY_CATEGORIES, "");
-                Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-                ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
-                if (dbCategories == null) {
-                    dbCategories = new ArrayList<>();
-                }
-
-                displayedCategories = dbCategories;
-                saveCategoriesToSharedPreferences();
+                displayedCategories = fragment.getData();
                 fragment.refreshView();
                 return true;
             default:
@@ -267,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
     private void deleteAllCategories() {
         SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(KeyStore.KEY_MAIN_CATEGORIES);
         editor.remove(KeyStore.KEY_CATEGORIES);
         editor.apply();
         displayedCategories.clear();
