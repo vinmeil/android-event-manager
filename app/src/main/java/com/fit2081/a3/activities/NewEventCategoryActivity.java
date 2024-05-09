@@ -84,6 +84,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             }
 
             loadDataFromSharedPreference();
+            // TODO: Fix constructor call
             Category category = new Category(categoryId, splitMessage[0], splitMessage[1], Boolean.parseBoolean(splitMessage[2]));
             categoriesDb.add(category);
             System.out.println(categoriesDb);
