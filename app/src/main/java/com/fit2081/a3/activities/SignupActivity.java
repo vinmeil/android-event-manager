@@ -1,4 +1,4 @@
-package com.fit2081.a2.activities;
+package com.fit2081.a3.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.R;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.R;
 
 public class SignupActivity extends AppCompatActivity {
 

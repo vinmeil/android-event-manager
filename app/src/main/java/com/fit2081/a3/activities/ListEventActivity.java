@@ -1,12 +1,12 @@
-package com.fit2081.a2.activities;
+package com.fit2081.a3.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.fit2081.a2.R;
-import com.fit2081.a2.components.FragmentListEvent;
+import com.fit2081.a3.R;
+import com.fit2081.a3.components.FragmentListEvent;
 
 public class ListEventActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.fit2081.a2.components;
+package com.fit2081.a3.components;
 
 import android.os.Bundle;
 
@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.R;
-import com.fit2081.a2.schemas.Event;
-import com.fit2081.a2.utils.EventListAdapter;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.R;
+import com.fit2081.a3.schemas.Event;
+import com.fit2081.a3.utils.EventListAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 

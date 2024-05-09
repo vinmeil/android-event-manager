@@ -30,7 +30,7 @@
                     android:layout_weight="3">
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/fragment_main_category_list"
-                        android:name="com.fit2081.a2.components.FragmentListCategory"
+                        android:name="com.fit2081.a3.components.FragmentListCategory"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -40,7 +40,7 @@
                     android:layout_weight="7">
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/fragmentViewCreate"
-                        android:name="com.fit2081.a2.components.FragmentCreateEventForm"
+                        android:name="com.fit2081.a3.components.FragmentCreateEventForm"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>

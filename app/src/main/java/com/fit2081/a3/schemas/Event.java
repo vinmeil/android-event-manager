@@ -1,10 +1,39 @@
-package com.fit2081.a2.schemas;
+package com.fit2081.a3.schemas;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "events")
 public class Event {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uniqueEventID")
+    @NonNull
+    private int uniqueID;
+
+    @ColumnInfo(name = "eventID")
     private String eventId;
+
+    @ColumnInfo(name = "eventName")
     private String eventName;
+
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
+    public void setUniqueID(int uniqueID) {
+        this.uniqueID = uniqueID;
+    }
+
+    @ColumnInfo(name = "eventCategoryID")
     private String eventCategoryId;
+
+    @ColumnInfo(name = "ticketsAvailable")
     private String ticketsAvailable;
+
+    @ColumnInfo(name = "isEventActive")
     private boolean isEventActive;
 
     public Event(String eventId, String eventName, String eventCategoryId, String ticketsAvailable, boolean isEventActive) {

@@ -1,4 +1,4 @@
-package com.fit2081.a2.components;
+package com.fit2081.a3.components;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,11 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.R;
-import com.fit2081.a2.activities.MainActivity;
-import com.fit2081.a2.schemas.Category;
-import com.fit2081.a2.utils.CategoryListAdapter;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.R;
+import com.fit2081.a3.schemas.Category;
+import com.fit2081.a3.utils.CategoryListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -1,4 +1,4 @@
-package com.fit2081.a2.utils;
+package com.fit2081.a3.utils;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fit2081.a2.R;
-import com.fit2081.a2.schemas.Event;
+import com.fit2081.a3.R;
+import com.fit2081.a3.schemas.Event;
 
 import java.util.ArrayList;
 

@@ -1,20 +1,59 @@
-package com.fit2081.a2.schemas;
+package com.fit2081.a3.schemas;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "categories")
 public class Category {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uniqueCategoryID")
+    @NonNull
+    private int uniqueID;
+
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
+    public void setUniqueID(int uniqueID) {
+        this.uniqueID = uniqueID;
+    }
+
+    @ColumnInfo(name = "categoryID")
     private String categoryId;
+
+    @ColumnInfo(name = "categoryName")
     private String categoryName;
+
+    @ColumnInfo(name = "categoryEventCount")
     private String categoryEventCount;
+
+    @ColumnInfo(name = "isCategoryEventActive")
     private boolean isCategoryEventActive;
 
-    public Category(String categoryId, String categoryName, String categoryEventCount, boolean isCategoryEventActive) {
+    @ColumnInfo(name = "location")
+    private String location;
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public Category(String categoryId, String categoryName, String categoryEventCount, boolean isCategoryEventActive, String location) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.categoryEventCount = categoryEventCount;
         this.isCategoryEventActive = isCategoryEventActive;
+        this.location = location;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public void setCategoryId(String categoryId) {

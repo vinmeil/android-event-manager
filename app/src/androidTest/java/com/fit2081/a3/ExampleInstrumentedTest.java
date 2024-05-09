@@ -1,4 +1,4 @@
-package com.fit2081.a2;
+package com.fit2081.a3;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.fit2081.a2", appContext.getPackageName());
+        assertEquals("com.fit2081.a3", appContext.getPackageName());
     }
 }

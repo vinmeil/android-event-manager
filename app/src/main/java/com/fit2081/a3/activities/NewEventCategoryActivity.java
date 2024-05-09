@@ -1,4 +1,4 @@
-package com.fit2081.a2.activities;
+package com.fit2081.a3.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,17 +8,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.R;
-import com.fit2081.a2.schemas.Category;
-import com.fit2081.a2.utils.SMSReceiver;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.R;
+import com.fit2081.a3.schemas.Category;
+import com.fit2081.a3.utils.SMSReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

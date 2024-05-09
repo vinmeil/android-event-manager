@@ -1,4 +1,4 @@
-package com.fit2081.a2.activities;
+package com.fit2081.a3.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,16 +20,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.R;
-import com.fit2081.a2.components.FragmentListCategory;
-import com.fit2081.a2.schemas.Category;
-import com.fit2081.a2.schemas.Event;
-import com.fit2081.a2.utils.NewEventUtils;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.R;
+import com.fit2081.a3.components.FragmentListCategory;
+import com.fit2081.a3.schemas.Category;
+import com.fit2081.a3.schemas.Event;
+import com.fit2081.a3.utils.NewEventUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import com.fit2081.a2.components.FragmentCreateEventForm;
+import com.fit2081.a3.components.FragmentCreateEventForm;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

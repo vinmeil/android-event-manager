@@ -1,4 +1,4 @@
-package com.fit2081.a2.utils;
+package com.fit2081.a3.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,12 +7,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
-import com.fit2081.a2.KeyStore;
-import com.fit2081.a2.components.FragmentListCategory;
-import com.fit2081.a2.schemas.Category;
-import com.fit2081.a2.schemas.Event;
+import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.schemas.Category;
+import com.fit2081.a3.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

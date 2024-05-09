@@ -1,4 +1,4 @@
-package com.fit2081.a2;
+package com.fit2081.a3;
 
 import org.junit.Test;
 

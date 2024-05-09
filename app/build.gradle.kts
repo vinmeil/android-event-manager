@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.fit2081.a2"
+    namespace = "com.fit2081.a3"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.fit2081.a2"
+        applicationId = "com.fit2081.a3"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
