@@ -12,12 +12,13 @@ import com.fit2081.a3.R;
 import com.fit2081.a3.schemas.Category;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.ViewHolder> {
 
-    ArrayList<Category> data = new ArrayList<>();
+    List<Category> data;
 
-    public void setData(ArrayList<Category> data) {
+    public void setData(List<Category> data) {
         this.data = data;
     }
 

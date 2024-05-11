@@ -5,15 +5,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
+import com.fit2081.a3.providers.CategoryViewModel;
 import com.fit2081.a3.schemas.Category;
 import com.fit2081.a3.utils.CategoryListAdapter;
 import com.google.gson.Gson;
@@ -21,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,12 +35,18 @@ public class FragmentListCategory extends Fragment {
     // Not sure what these do, I'll leave them here
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "FragmentListCategory";
     private String mParam1;
     private String mParam2;
 
-    ArrayList<Category> categories = new ArrayList<>();
+//    ArrayList<Category> categories = new ArrayList<>();
+
+    List<Category> categories;
     CategoryListAdapter categoryListAdapter;
+
     private RecyclerView recyclerView;
+
+    CategoryViewModel mCategoryViewModel;
 
     public FragmentListCategory() {
         // Required empty public constructor
@@ -82,6 +92,8 @@ public class FragmentListCategory extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         categoryListAdapter.setData(categories);
         recyclerView.setAdapter(categoryListAdapter);
+
+        mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
     }
 
     @Override
@@ -91,30 +103,16 @@ public class FragmentListCategory extends Fragment {
     }
 
     public void refreshView() {
-        Gson gson = new Gson();
-        String categoriesStr;
-        categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        ArrayList<Category> dbCategories = gson.fromJson(categoriesStr, type);
-
-        if (dbCategories == null) {
-            dbCategories = new ArrayList<>();
-        }
-
-        categoryListAdapter.setData(dbCategories);
-        categoryListAdapter.notifyDataSetChanged();
+        mCategoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), newData -> {
+            categoryListAdapter.setData(newData);
+            categories = newData;
+            categoryListAdapter.notifyDataSetChanged();
+        });
     }
 
-    public void displayData(ArrayList<Category> data) {
+    public void displayData(List<Category> data) {
         categories = data;
         categoryListAdapter.setData(categories);
         categoryListAdapter.notifyDataSetChanged();
-    }
-
-    public ArrayList<Category> getData() {
-        Gson gson = new Gson();
-        String categoriesStr = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_CATEGORIES, "");
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        return gson.fromJson(categoriesStr, type);
     }
 }

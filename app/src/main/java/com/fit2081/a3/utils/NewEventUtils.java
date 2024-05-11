@@ -8,6 +8,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.fit2081.a3.KeyStore;
+import com.fit2081.a3.providers.CategoryViewModel;
+import com.fit2081.a3.providers.EventViewModel;
 import com.fit2081.a3.schemas.Category;
 import com.fit2081.a3.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
@@ -16,10 +18,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewEventUtils {
-    private static ArrayList<Event> events = new ArrayList<>();
-    private static Gson gson = new Gson();
+    private static List<Event> events;
+    static EventViewModel mEventViewModel;
+    static CategoryViewModel mCategoryViewModel;
     public static void onCreateNewEventButtonClick(
             Context context,
             View view,
@@ -50,31 +54,25 @@ public class NewEventUtils {
                 splitMessage[3] = "false";
             }
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
-            String getEventsStr = sharedPreferences.getString(KeyStore.KEY_EVENTS, "");
-            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-            events = gson.fromJson(getEventsStr, type);
+            Event event = new Event(
+                    eventId,
+                    splitMessage[0],
+                    splitMessage[1],
+                    splitMessage[2],
+                    Boolean.parseBoolean(splitMessage[3])
+            );
 
-            if (events == null) {
-                events = new ArrayList<>();
-            }
+            // save event to database using viewmodel
+            mEventViewModel.addEvent(event);
 
-            Event event = new Event(eventId, splitMessage[0], splitMessage[1], splitMessage[2], Boolean.parseBoolean(splitMessage[3]));
-            events.add(event);
-
-            String eventsStr = gson.toJson(events);
-            saveEventsToSharedPreference(context, eventsStr);
             Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             String eventCategoryId = event.getEventCategoryId();
-                            Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-                            String getCategoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
-                            ArrayList<Category> categories = gson.fromJson(getCategoriesStr, type);
 
-                            if (categories == null) {
-                                categories = new ArrayList<>();
-                            }
+                            mEventViewModel.deleteEvent(eventId);
+
+                            List<Category> categories = mCategoryViewModel.getAllCategories().getValue();
 
                             for (Category category: categories) {
                                 if (category.getCategoryId().equalsIgnoreCase(eventCategoryId)) {
@@ -83,11 +81,6 @@ public class NewEventUtils {
                                 }
                             }
 
-                            events.remove(event);
-                            String newEventsStr = gson.toJson(events);
-                            String newCategoriesStr = gson.toJson(categories);
-                            saveEventsToSharedPreference(context, newEventsStr);
-                            saveCategoriesToSharedPreference(context, newCategoriesStr);
                             Snackbar.make(view, "Undid Save Event", Snackbar.LENGTH_SHORT).show();
                         }
                     }).show();
@@ -132,13 +125,7 @@ public class NewEventUtils {
 
             // Increment event count only if it is valid
             if (isValid) {
-                SharedPreferences sharedPref = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
-                String getCategoriesStr = sharedPref.getString(KeyStore.KEY_CATEGORIES, "");
-                Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-                ArrayList<Category> categories = gson.fromJson(getCategoriesStr, type);
-                if (categories == null) {
-                    categories = new ArrayList<>();
-                }
+                List<Category> categories = mCategoryViewModel.getAllCategories().getValue();
 
                 boolean isCategoryIdValid = false;
                 for (Category category : categories) {
@@ -148,11 +135,6 @@ public class NewEventUtils {
                         break;
                     }
                 }
-
-                String newCategoriesStr = gson.toJson(categories);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyStore.KEY_CATEGORIES, newCategoriesStr);
-                editor.apply();
 
                 if (!isCategoryIdValid) {
                     isValid = false;

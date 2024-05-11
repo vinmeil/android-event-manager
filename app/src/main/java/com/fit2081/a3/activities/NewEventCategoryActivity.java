@@ -1,6 +1,7 @@
 package com.fit2081.a3.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
+import com.fit2081.a3.providers.CategoryViewModel;
 import com.fit2081.a3.schemas.Category;
 import com.fit2081.a3.utils.SMSReceiver;
 import com.google.gson.Gson;
@@ -25,11 +27,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class NewEventCategoryActivity extends AppCompatActivity {
-    EditText etCategoryId, etCategoryName, etCategoryEventCount;
+    EditText etCategoryId, etCategoryName, etCategoryEventCount, etLocation;
     Switch isCategoryEventActive;
     String[] splitMessage;
     EventCategoryBroadCastReceiver eventCategoryBroadCastReceiver;
     ArrayList<Category> categoriesDb = new ArrayList<>();
+
+    CategoryViewModel mCategoryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,12 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         etCategoryName = findViewById(R.id.editTextCategoryName);
         etCategoryEventCount = findViewById(R.id.editTextCategoryCount);
         isCategoryEventActive = findViewById(R.id.switchCategoryIsActive);
+        etLocation = findViewById(R.id.editTextCategoryLocation);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         etCategoryId.setFocusable(false);
+
+        mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
     }
 
     @Override
@@ -70,56 +77,28 @@ public class NewEventCategoryActivity extends AppCompatActivity {
 
     public void onCreateNewCategoryButtonClick(View view) {
         String categoryId = etCategoryId.getText().toString().isEmpty() ? generateCategoryId() : etCategoryId.getText().toString();
-        String[] temporaryMessage = new String[3];
-        temporaryMessage[0] = etCategoryName.getText().toString();
-        temporaryMessage[1] = etCategoryEventCount.getText().toString();
-        temporaryMessage[2] = String.valueOf(isCategoryEventActive.isChecked());
+        String categoryName = etCategoryName.getText().toString();
+        String categoryEventCount = etCategoryEventCount.getText().toString();
+        String isCategoryActive = String.valueOf(isCategoryEventActive.isChecked());
+        String location = etLocation.getText().toString();
+
+        String[] temporaryMessage = {categoryName, categoryEventCount, isCategoryActive};
         boolean isValid = checkValidMessage(temporaryMessage);
 
         if (isValid) {
-            splitMessage = temporaryMessage;
-
-            if (splitMessage[2].isEmpty()) {
-                splitMessage[2] = "false";
+            if (isCategoryActive.isEmpty()) {
+                isCategoryActive = "false";
             }
 
-            loadDataFromSharedPreference();
-            // TODO: Fix constructor call
-            Category category = new Category(categoryId, splitMessage[0], splitMessage[1], Boolean.parseBoolean(splitMessage[2]));
-            categoriesDb.add(category);
-            System.out.println(categoriesDb);
-            System.out.println(categoriesDb.size());
-            saveDataToSharedPreference(categoriesDb);
+//            loadDataFromSharedPreference();
+            Category category = new Category(categoryId, categoryName, categoryEventCount, Boolean.parseBoolean(isCategoryActive), location);
+            mCategoryViewModel.addCategory(category);
 
             finish();
         } else {
             Toast.makeText(this, "Invalid inputs in fields!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void loadDataFromSharedPreference() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        categoriesDb = gson.fromJson(categoriesStr, type);
-        if (categoriesDb == null) {
-            categoriesDb = new ArrayList<>();
-        }
-    }
-
-
-    private void saveDataToSharedPreference(ArrayList<Category> categories) {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        Gson gson = new Gson();
-        String categoriesStr = gson.toJson(categories);
-        editor.putString(KeyStore.KEY_CATEGORIES, categoriesStr);
-
-        editor.apply();
-    }
-
 
     private String generateCategoryId() {
         String categoryId = "C";

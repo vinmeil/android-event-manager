@@ -29,4 +29,7 @@ public interface EventAndCategoryDAO {
 
     @Query("DELETE FROM events")
     void deleteAllEvents();
+
+    @Query("DELETE FROM events WHERE eventId = :eventId")
+    void deleteEvent(String eventId);
 }

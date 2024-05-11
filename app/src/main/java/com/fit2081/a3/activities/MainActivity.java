@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,8 @@ import android.widget.Switch;
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
 import com.fit2081.a3.components.FragmentListCategory;
+import com.fit2081.a3.providers.CategoryViewModel;
+import com.fit2081.a3.providers.EventViewModel;
 import com.fit2081.a3.schemas.Category;
 import com.fit2081.a3.schemas.Event;
 import com.fit2081.a3.utils.NewEventUtils;
@@ -36,6 +39,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -45,15 +49,22 @@ public class MainActivity extends AppCompatActivity {
     EditText etEventId, etEventName, etEventCategoryId, etTicketsAvailable;
     Switch isEventActive;
     String[] splitMessage;
-    public ArrayList<Category> displayedCategories = new ArrayList<>();
 
+    private List<Category> displayedCategories = new ArrayList<Category>() {
+    };
+    private List<Category> allCategories;
+    private boolean isFirstCreation = true;
     // REMOVE LATER
     private static final String TAG = "MainActivity";
+
+    EventViewModel mEventViewModel;
+    CategoryViewModel mCategoryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "Initial onCreate (Line 66)");
 
         ActivityCompat.requestPermissions(this, new String[]{
                 android.Manifest.permission.SEND_SMS,
@@ -88,15 +99,25 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupNavigationMenu();
 
+        mEventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
+        mCategoryViewModel.getAllCategories().observe(this, newData -> {
+            allCategories = newData;
+        });
+
         // Gets executed when fragments are created
-        Log.d(TAG, "onCreate");
         awaitFragmentCreated();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+        if (isFirstCreation && allCategories != null) {
+            isFirstCreation = false;
+            displayedCategories.addAll(allCategories);
+        }
+
         FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
         fragment.displayData(displayedCategories);
     }
@@ -134,10 +155,12 @@ public class MainActivity extends AppCompatActivity {
                             );
                         }
                     });
-                } else if (fragment instanceof FragmentListCategory) {
+                }
+
+                if (fragment instanceof FragmentListCategory) {
                     FragmentListCategory fragmentListCategory = (FragmentListCategory) fragment;
-                    fragmentListCategory.refreshView();
-                    displayedCategories = fragmentListCategory.getData();
+                    Log.d(TAG, "awaitFragmentCreated: displayedCategories: " + displayedCategories);
+                    fragmentListCategory.displayData(displayedCategories);
                 }
             }
         }, false);
@@ -150,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.view_all_categories:
                     intent = new Intent(this, ListCategoryActivity.class);
+                    Log.d(TAG, "setupNavigationMenu: view_all_categories");
                     startActivity(intent);
                     break;
                 case R.id.add_category:
@@ -199,15 +223,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.option_delete_all_categories:
                 deleteAllCategories();
-                fragment.refreshView();
+                fragment.displayData(displayedCategories);
                 return true;
             case R.id.option_delete_all_events:
                 deleteAllEvents();
                 fragment.refreshView();
                 return true;
             case R.id.option_refresh:
-                displayedCategories = fragment.getData();
-                fragment.refreshView();
+                displayedCategories = mCategoryViewModel.getAllCategories().getValue();
+                fragment.displayData(displayedCategories);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -215,14 +239,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteAllCategories() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(KeyStore.KEY_CATEGORIES);
-        editor.apply();
+        mCategoryViewModel.deleteAllCategories();
         displayedCategories.clear();
-
-        FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager().findFragmentById(R.id.fragment_main_category_list);
-        fragment.refreshView();
     }
 
     private void deleteAllEvents() {

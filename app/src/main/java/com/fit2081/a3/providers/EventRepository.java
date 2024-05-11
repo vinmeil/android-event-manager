@@ -33,4 +33,10 @@ public class EventRepository {
             mEventAndCategoryDAO.deleteAllEvents();
         });
     }
+
+    void deleteEvent(String eventId) {
+        EventAndCategoryDatabase.databaseWriteExecutor.execute(() -> {
+            mEventAndCategoryDAO.deleteEvent(eventId);
+        });
+    }
 }
