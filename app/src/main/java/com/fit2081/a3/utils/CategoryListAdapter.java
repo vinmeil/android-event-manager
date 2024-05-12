@@ -18,6 +18,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     List<Category> data;
 
+    public interface onItemClickListener {
+        void onItemClick(Category category);
+    }
+
+    private onItemClickListener listener;
+
+    public void setOnItemClickListener(onItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public void setData(List<Category> data) {
         this.data = data;
     }
@@ -58,6 +68,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             nameTv = itemView.findViewById(R.id.list_category_name);
             countTv = itemView.findViewById(R.id.list_category_count);
             activeTv = itemView.findViewById(R.id.list_category_active);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(data.get(position));
+                    }
+                }
+            });
         }
     }
 }

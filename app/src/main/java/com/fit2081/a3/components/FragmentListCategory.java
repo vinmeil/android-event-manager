@@ -1,6 +1,8 @@
 package com.fit2081.a3.components;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
+import com.fit2081.a3.activities.MapsActivity;
 import com.fit2081.a3.providers.CategoryViewModel;
 import com.fit2081.a3.schemas.Category;
 import com.fit2081.a3.utils.CategoryListAdapter;
@@ -91,6 +95,15 @@ public class FragmentListCategory extends Fragment {
         recyclerView = view.findViewById(R.id.category_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         categoryListAdapter.setData(categories);
+        categoryListAdapter.setOnItemClickListener(new CategoryListAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(Category category) {
+                String location = category.getLocation();
+                Intent mapIntent = new Intent(getContext(), MapsActivity.class);
+                mapIntent.putExtra("location", location);
+                startActivity(mapIntent);
+            }
+        });
         recyclerView.setAdapter(categoryListAdapter);
 
         mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
