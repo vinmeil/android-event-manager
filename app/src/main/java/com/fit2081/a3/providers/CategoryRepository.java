@@ -33,4 +33,16 @@ public class CategoryRepository {
             mEventAndCategoryDAO.deleteAllCategories();
         });
     }
+
+    void decrementEventCount(String categoryId) {
+        EventAndCategoryDatabase.databaseWriteExecutor.execute(() -> {
+            mEventAndCategoryDAO.decrementEventCount(categoryId);
+        });
+    }
+
+    void incrementEventCount(String categoryId) {
+        EventAndCategoryDatabase.databaseWriteExecutor.execute(() -> {
+            mEventAndCategoryDAO.incrementEventCount(categoryId);
+        });
+    }
 }

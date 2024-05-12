@@ -7,6 +7,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.providers.CategoryViewModel;
 import com.fit2081.a3.providers.EventViewModel;
@@ -63,6 +66,8 @@ public class NewEventUtils {
             );
 
             // save event to database using viewmodel
+            mEventViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(EventViewModel.class);
+            mCategoryViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(CategoryViewModel.class);
             mEventViewModel.addEvent(event);
 
             Snackbar.make(view, "Saved Event Successfully", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
@@ -76,7 +81,7 @@ public class NewEventUtils {
 
                             for (Category category: categories) {
                                 if (category.getCategoryId().equalsIgnoreCase(eventCategoryId)) {
-                                    category.decrementEventCount();
+                                    mCategoryViewModel.decrementEventCount(eventCategoryId);
                                     break;
                                 }
                             }
@@ -125,13 +130,14 @@ public class NewEventUtils {
 
             // Increment event count only if it is valid
             if (isValid) {
+                mCategoryViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(CategoryViewModel.class);
                 List<Category> categories = mCategoryViewModel.getAllCategories().getValue();
 
                 boolean isCategoryIdValid = false;
                 for (Category category : categories) {
                     if (eventCategoryId.equalsIgnoreCase(category.getCategoryId())) {
                         isCategoryIdValid = true;
-                        category.incrementEventCount();
+                        mCategoryViewModel.incrementEventCount(eventCategoryId);
                         break;
                     }
                 }

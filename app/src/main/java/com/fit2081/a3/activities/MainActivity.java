@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Category> displayedCategories = new ArrayList<Category>() {
     };
     private List<Category> allCategories;
+    private List<Event> allEvents;
     private boolean isFirstCreation = true;
     // REMOVE LATER
     private static final String TAG = "MainActivity";
@@ -101,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
 
         mEventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
+        mEventViewModel.getAllEvents().observe(this, newData -> {
+            allEvents = newData;
+        });
 
         mCategoryViewModel.getAllCategories().observe(this, newData -> {
             allCategories = newData;
@@ -244,38 +249,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteAllEvents() {
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.FILE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        String allEventsStr = sharedPreferences.getString(KeyStore.KEY_EVENTS, "");
-        String categoriesStr = sharedPreferences.getString(KeyStore.KEY_CATEGORIES, "");
-        Gson gson = new Gson();
-        Type eventType = new TypeToken<ArrayList<Event>>() {}.getType();
-        Type categoryType = new TypeToken<ArrayList<Category>>() {}.getType();
-        ArrayList<Event> allEvents = gson.fromJson(allEventsStr, eventType);
-        ArrayList<Category> categories = gson.fromJson(categoriesStr, categoryType);
-
-        if (allEvents == null) {
-            allEvents = new ArrayList<>();
-        }
-
-        if (categories == null) {
-            categories = new ArrayList<>();
-        }
-
         for (Event event: allEvents) {
             String eventCategoryId = event.getEventCategoryId();
-            for (Category category: categories) {
+            for (Category category: allCategories) {
                 if (category.getCategoryId().equalsIgnoreCase(eventCategoryId)) {
-                    category.decrementEventCount();
+                    mCategoryViewModel.decrementEventCount(eventCategoryId);
                     break;
                 }
             }
         }
 
-        String newCategoriesStr = gson.toJson(categories);
-        editor.putString(KeyStore.KEY_CATEGORIES, newCategoriesStr);
-        editor.remove(KeyStore.KEY_EVENTS);
-        editor.apply();
+        mEventViewModel.deleteAllEvents();
     }
 }

@@ -3,6 +3,8 @@ package com.fit2081.a3.components;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
+import com.fit2081.a3.providers.EventViewModel;
 import com.fit2081.a3.schemas.Event;
 import com.fit2081.a3.utils.EventListAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +22,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +40,8 @@ public class FragmentListEvent extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ArrayList<Event> events = new ArrayList<Event>();
+    List<Event> events = new ArrayList<>();
+    EventViewModel mEventViewModel;
     EventListAdapter eventListAdapter;
     private RecyclerView recyclerView;
 
@@ -79,7 +84,6 @@ public class FragmentListEvent extends Fragment {
         eventListAdapter = new EventListAdapter();
         eventListAdapter.setData(events);
         recyclerView.setAdapter(eventListAdapter);
-        displayEvents();
     }
 
     @Override
@@ -89,16 +93,9 @@ public class FragmentListEvent extends Fragment {
         return inflater.inflate(R.layout.fragment_event_list, container, false);
     }
 
-    public void displayEvents() {
-        Gson gson = new Gson();
-        String events = getContext().getSharedPreferences(KeyStore.FILE_NAME, 0).getString(KeyStore.KEY_EVENTS, "");
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        ArrayList<Event> dbEvents = gson.fromJson(events, type);
-        if (dbEvents == null) {
-            dbEvents = new ArrayList<>();
-        }
-
-        eventListAdapter.setData(dbEvents);
+    public void displayData(List<Event> data) {
+        events = data;
+        eventListAdapter.setData(events);
         eventListAdapter.notifyDataSetChanged();
     }
 }

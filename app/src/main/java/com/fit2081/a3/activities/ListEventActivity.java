@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.fit2081.a3.R;
 import com.fit2081.a3.components.FragmentListEvent;
+import com.fit2081.a3.providers.EventViewModel;
 
 public class ListEventActivity extends AppCompatActivity {
+
+    EventViewModel mEventViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +20,12 @@ public class ListEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_all_events);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentAllEventList, new FragmentListEvent()).addToBackStack("f1").commit();
+
+        mEventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        mEventViewModel.getAllEvents().observe(this, newData -> {
+            FragmentListEvent fragment = (FragmentListEvent) getSupportFragmentManager().findFragmentById(R.id.fragmentAllEventList);
+            fragment.displayData(newData);
+        });
     }
 
     @Override

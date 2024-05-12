@@ -12,12 +12,13 @@ import com.fit2081.a3.R;
 import com.fit2081.a3.schemas.Event;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
-    ArrayList<Event> data = new ArrayList<Event>();
+    List<Event> data = new ArrayList<Event>();
 
-    public void setData(ArrayList<Event> data) {
+    public void setData(List<Event> data) {
         this.data = data;
     }
 

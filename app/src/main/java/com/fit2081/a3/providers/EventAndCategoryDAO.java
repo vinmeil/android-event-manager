@@ -27,6 +27,12 @@ public interface EventAndCategoryDAO {
     @Query("DELETE FROM categories")
     void deleteAllCategories();
 
+    @Query("UPDATE categories SET categoryEventCount = categoryEventCount - 1 WHERE categoryID = :categoryId")
+    void decrementEventCount(String categoryId);
+
+    @Query("UPDATE categories SET categoryEventCount = categoryEventCount + 1 WHERE categoryID = :categoryId")
+    void incrementEventCount(String categoryId);
+
     @Query("DELETE FROM events")
     void deleteAllEvents();
 
