@@ -1,5 +1,6 @@
 package com.fit2081.a3.components;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,12 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
+import com.fit2081.a3.activities.WebViewActivity;
 import com.fit2081.a3.providers.EventViewModel;
 import com.fit2081.a3.schemas.Event;
 import com.fit2081.a3.utils.EventListAdapter;
@@ -83,6 +86,16 @@ public class FragmentListEvent extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         eventListAdapter = new EventListAdapter();
         eventListAdapter.setData(events);
+        eventListAdapter.setOnItemClickListener(new EventListAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(Event event) {
+                String eventName = event.getEventName();
+                Intent webIntent = new Intent(getContext(), WebViewActivity.class);
+                webIntent.putExtra("eventName", eventName);
+                startActivity(webIntent);
+            }
+        });
+
         recyclerView.setAdapter(eventListAdapter);
     }
 

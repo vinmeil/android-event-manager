@@ -18,6 +18,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     List<Event> data = new ArrayList<Event>();
 
+    public interface onItemClickListener {
+        void onItemClick(Event event);
+    }
+
+    private onItemClickListener listener;
+
+    public void setOnItemClickListener(EventListAdapter.onItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public void setData(List<Event> data) {
         this.data = data;
     }
@@ -59,6 +69,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             categoryIdTv = itemView.findViewById(R.id.event_list_item_category_id);
             countTv = itemView.findViewById(R.id.event_list_item_count);
             activeTv = itemView.findViewById(R.id.event_list_item_active);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(data.get(position));
+                    }
+                }
+            });
         }
     }
 }
