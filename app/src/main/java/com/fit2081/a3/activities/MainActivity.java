@@ -15,11 +15,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.fit2081.a3.KeyStore;
 import com.fit2081.a3.R;
@@ -34,10 +37,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import com.fit2081.a3.components.FragmentCreateEventForm;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     EventViewModel mEventViewModel;
     CategoryViewModel mCategoryViewModel;
+    TextView tvGesture;
+    View gestureView;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         // Find views
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        gestureView = findViewById(R.id.gestureView);
+        tvGesture = findViewById(R.id.textViewGesture);
         fab = findViewById(R.id.fab);
 
         // Drawer layout toggle
@@ -98,6 +103,43 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupNavigationMenu();
+
+        mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                etEventId = findViewById(R.id.editTextEventId);
+                etEventName = findViewById(R.id.editTextEventName);
+                etEventCategoryId = findViewById(R.id.editTextEventCategoryId);
+                etTicketsAvailable = findViewById(R.id.editTextTicketsAvailable);
+                isEventActive = findViewById(R.id.switchEventIsActive);
+                NewEventUtils.onCreateNewEventButtonClick(
+                        MainActivity.this,
+                        findViewById(R.id.fragmentViewCreate),
+                        etEventId,
+                        etEventName,
+                        etEventCategoryId,
+                        etTicketsAvailable,
+                        splitMessage,
+                        isEventActive
+                );
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                etEventName.setText("");
+                etEventCategoryId.setText("");
+                etTicketsAvailable.setText("");
+                isEventActive.setChecked(false);
+            }
+        });
+        gestureView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
 
         mEventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);

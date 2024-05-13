@@ -44,6 +44,8 @@ public class NewEventUtils {
         temporaryMessage[1] = etEventCategoryId.getText().toString();
         temporaryMessage[2] = etTicketsAvailable.getText().toString();
         temporaryMessage[3] = String.valueOf(isEventActive.isChecked());
+
+        temporaryMessage[1] = temporaryMessage[1].toUpperCase();
         boolean isValid = checkValidMessage(context, temporaryMessage);
 
         if (isValid) {
