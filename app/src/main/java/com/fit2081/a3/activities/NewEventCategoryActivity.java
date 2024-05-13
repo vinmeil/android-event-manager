@@ -90,7 +90,6 @@ public class NewEventCategoryActivity extends AppCompatActivity {
                 isCategoryActive = "false";
             }
 
-//            loadDataFromSharedPreference();
             Category category = new Category(categoryId, categoryName, categoryEventCount, Boolean.parseBoolean(isCategoryActive), location);
             mCategoryViewModel.addCategory(category);
 

@@ -167,20 +167,4 @@ public class NewEventUtils {
 
         return eventId;
     }
-
-    private static void saveEventsToSharedPreference(Context context, String events) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(KeyStore.KEY_EVENTS, events);
-        editor.apply();
-    }
-
-    private static void saveCategoriesToSharedPreference(Context context, String categories) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(KeyStore.FILE_NAME, context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(KeyStore.KEY_CATEGORIES, categories);
-        editor.apply();
-    }
 }

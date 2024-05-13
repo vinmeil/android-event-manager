@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.location.Geocoder;
 import android.location.Address;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -80,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.addMarker(new MarkerOptions().position(locationLatLng).title(location));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+        Log.d("MapsActivity", "Geocoded location: " + locationLatLng);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLatLng, 10));
     }
 }
