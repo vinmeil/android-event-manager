@@ -1,4 +1,4 @@
-package com.fit2081.a3.schemas;
+package com.event_manager.schemas;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

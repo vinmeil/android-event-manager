@@ -1,4 +1,4 @@
-package com.fit2081.a3.activities;
+package com.event_manager.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -6,9 +6,9 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.fit2081.a3.R;
-import com.fit2081.a3.components.FragmentListEvent;
-import com.fit2081.a3.providers.EventViewModel;
+import com.event_manager.R;
+import com.event_manager.components.FragmentListEvent;
+import com.event_manager.providers.EventViewModel;
 
 public class ListEventActivity extends AppCompatActivity {
 

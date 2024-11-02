@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.fit2081.a3"
+    namespace = "com.event_manager"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.fit2081.a3"
+        applicationId = "com.event_manager"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

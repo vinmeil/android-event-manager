@@ -1,4 +1,4 @@
-package com.fit2081.a3.activities;
+package com.event_manager.activities;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -14,8 +14,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.fit2081.a3.databinding.ActivityMapsBinding;
-import com.fit2081.a3.R;
+import com.event_manager.databinding.ActivityMapsBinding;
+import com.event_manager.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

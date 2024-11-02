@@ -1,4 +1,4 @@
-package com.fit2081.a3.components;
+package com.event_manager.components;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fit2081.a3.KeyStore;
-import com.fit2081.a3.R;
-import com.fit2081.a3.activities.WebViewActivity;
-import com.fit2081.a3.providers.EventViewModel;
-import com.fit2081.a3.schemas.Event;
-import com.fit2081.a3.utils.EventListAdapter;
+import com.event_manager.KeyStore;
+import com.event_manager.R;
+import com.event_manager.activities.WebViewActivity;
+import com.event_manager.providers.EventViewModel;
+import com.event_manager.schemas.Event;
+import com.event_manager.utils.EventListAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 

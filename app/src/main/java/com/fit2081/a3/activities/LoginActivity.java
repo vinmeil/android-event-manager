@@ -1,4 +1,4 @@
-package com.fit2081.a3.activities;
+package com.event_manager.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fit2081.a3.KeyStore;
-import com.fit2081.a3.R;
+import com.event_manager.KeyStore;
+import com.event_manager.R;
 
 public class LoginActivity extends AppCompatActivity {
     EditText etUsername, etPassword;

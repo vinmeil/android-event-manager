@@ -1,4 +1,4 @@
-package com.fit2081.a3.components;
+package com.event_manager.components;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.fit2081.a3.R;
-import com.fit2081.a3.utils.NewEventUtils;
-import com.fit2081.a3.utils.SMSReceiver;
+import com.event_manager.R;
+import com.event_manager.utils.NewEventUtils;
+import com.event_manager.utils.SMSReceiver;
 
 /**
  * A simple {@link Fragment} subclass.

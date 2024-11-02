@@ -1,4 +1,4 @@
-package com.fit2081.a3.activities;
+package com.event_manager.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,11 +15,11 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.fit2081.a3.KeyStore;
-import com.fit2081.a3.R;
-import com.fit2081.a3.providers.CategoryViewModel;
-import com.fit2081.a3.schemas.Category;
-import com.fit2081.a3.utils.SMSReceiver;
+import com.event_manager.KeyStore;
+import com.event_manager.R;
+import com.event_manager.providers.CategoryViewModel;
+import com.event_manager.schemas.Category;
+import com.event_manager.utils.SMSReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

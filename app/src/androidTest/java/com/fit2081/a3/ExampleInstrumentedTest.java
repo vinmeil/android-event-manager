@@ -1,4 +1,4 @@
-package com.fit2081.a3;
+package com.event_manager;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.fit2081.a3", appContext.getPackageName());
+        assertEquals("com.event_manager", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.fit2081.a3.utils;
+package com.event_manager.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,11 +10,11 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.fit2081.a3.KeyStore;
-import com.fit2081.a3.providers.CategoryViewModel;
-import com.fit2081.a3.providers.EventViewModel;
-import com.fit2081.a3.schemas.Category;
-import com.fit2081.a3.schemas.Event;
+import com.event_manager.KeyStore;
+import com.event_manager.providers.CategoryViewModel;
+import com.event_manager.providers.EventViewModel;
+import com.event_manager.schemas.Category;
+import com.event_manager.schemas.Event;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

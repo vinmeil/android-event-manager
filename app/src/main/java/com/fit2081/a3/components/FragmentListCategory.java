@@ -1,4 +1,4 @@
-package com.fit2081.a3.components;
+package com.event_manager.components;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.fit2081.a3.KeyStore;
-import com.fit2081.a3.R;
-import com.fit2081.a3.activities.MapsActivity;
-import com.fit2081.a3.providers.CategoryViewModel;
-import com.fit2081.a3.schemas.Category;
-import com.fit2081.a3.utils.CategoryListAdapter;
+import com.event_manager.KeyStore;
+import com.event_manager.R;
+import com.event_manager.activities.MapsActivity;
+import com.event_manager.providers.CategoryViewModel;
+import com.event_manager.schemas.Category;
+import com.event_manager.utils.CategoryListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

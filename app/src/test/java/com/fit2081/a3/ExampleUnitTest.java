@@ -1,4 +1,4 @@
-package com.fit2081.a3;
+package com.event_manager;
 
 import org.junit.Test;
 

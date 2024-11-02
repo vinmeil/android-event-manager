@@ -1,4 +1,4 @@
-package com.fit2081.a3;
+package com.event_manager;
 
 public class KeyStore {
     public static String FILE_NAME = "SHARED_PREFERENCES";

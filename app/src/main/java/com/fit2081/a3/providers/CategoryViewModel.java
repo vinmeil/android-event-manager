@@ -1,4 +1,4 @@
-package com.fit2081.a3.providers;
+package com.event_manager.providers;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.fit2081.a3.schemas.Category;
+import com.event_manager.schemas.Category;
 
 import java.util.List;
 

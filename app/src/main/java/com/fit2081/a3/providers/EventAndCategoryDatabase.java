@@ -1,12 +1,12 @@
-package com.fit2081.a3.providers;
+package com.event_manager.providers;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-import com.fit2081.a3.schemas.Category;
-import com.fit2081.a3.schemas.Event;
+import com.event_manager.schemas.Category;
+import com.event_manager.schemas.Event;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.fit2081.a3.utils;
+package com.event_manager.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

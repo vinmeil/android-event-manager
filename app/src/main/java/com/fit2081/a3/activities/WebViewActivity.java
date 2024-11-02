@@ -1,4 +1,4 @@
-package com.fit2081.a3.activities;
+package com.event_manager.activities;
 
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -10,7 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.fit2081.a3.R;
+import com.event_manager.R;
 
 public class WebViewActivity extends AppCompatActivity {
 

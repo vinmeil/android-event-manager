@@ -1,10 +1,10 @@
-package com.fit2081.a3.providers;
+package com.event_manager.providers;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.fit2081.a3.schemas.Event;
+import com.event_manager.schemas.Event;
 
 import java.util.List;
 
